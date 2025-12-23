@@ -1,15 +1,97 @@
-export function getAllNotes (req, res) {
-    res.status(200).json({success:true, message:"Notes have been fetched/read succesfully"});
+import Note from "../models/Note.js";
+
+export async function getAllNotes (req, res) {
+    // 'req' is declared but its value is never read.
+    // so we can use _(underscore) instead of req. 
+    // Like this:
+    // export async function getAllNotes (_, res) {}
+    try {
+        const notes = await Note.find().sort({createdAt:-1}); //get the recently created note, i.e descending based createdAt date&time
+        res.status(200).json(notes);
+    } catch (error) {
+        console.error("Error in getAllNotes controller", error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
 };
 
-export function createNote(req, res) {
-    res.status(201).json({success: true, message: "Note has been created succesfully"});
+export async function getNoteById(req, res){
+    try {
+        const noteById = await Note.findById(req.params.id);
+
+        if(!noteById){
+            return res.status(404).json({
+                message: "Get(ID): Note not found"
+            })
+        }
+        res.status(200).json(noteById);
+
+    } catch (error) {
+        console.error("Error in getNoteById controller", error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
+}
+
+export async function createNote(req, res) {
+    try {
+        const {title, content} = req.body;
+        const newNote = new Note({title, content});
+        // it is {title:title, content:content}, since both are same shorthand is used here
+        const savedNote = await newNote.save();
+        
+        res.status(201).json(savedNote);
+
+    } catch (error) {
+        console.error("Error in createNote controller", error);
+        res.status(500).json({
+            message:"Internal Server Error"
+        });
+    }
 };
 
-export function updateNote(req, res) {
-    res.status(200).json({success:true, message: "Note has been updated succesfully"});
+export async function updateNote(req, res) {
+    try {
+        const {title, content} = req.body;
+        
+        const updatedNote = await Note.findByIdAndUpdate(req.params.id, {title, content}, {new:true}); 
+        
+        if(!updatedNote){
+            return res.status(404).json({
+                message:"Put: Note not found"
+            });
+        }
+
+        res.status(200).json(updatedNote);
+
+    } catch (error) {
+        console.error("Error in updateNote controller", error);
+        res.status(500).json({
+            message:"Internal Server Error"
+        });
+    }
 };
 
-export function deleteNote (req, res) {
-    res.status(200).json({success:true, message: "Note has been deleted succesfully"});
+export async function deleteNote (req, res) {
+    try {
+        const deletedNote = await Note.findByIdAndDelete(req.params.id, {new:true}); 
+        
+        if(!deletedNote){
+            return res.status(404).json({
+                message:"Delete: Note not found"
+            });
+        }
+
+        res.status(200).json({
+            message: "Note deleted successfully"
+        });
+
+    } catch (error) {
+        console.error("Error in updateNote controller", error);
+        res.status(500).json({
+            message:"Internal Server Error"
+        });
+    }
 };

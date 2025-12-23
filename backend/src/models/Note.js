@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 // Step 1: define the schema
 const noteSchema = new mongoose.Schema(
     {
@@ -20,6 +19,5 @@ const noteSchema = new mongoose.Schema(
 // Step 2: Create a model based off the schema created at step 1
 const Note = mongoose.model("Note", noteSchema);
 // IMP: models should always be Capitalized(1st letter) and singular
-
 
 export default Note;
