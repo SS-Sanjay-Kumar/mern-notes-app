@@ -13,13 +13,13 @@ export default {
 
 daisyui: {
     themes: [
-      "light",
-      "dark",
-      "caramellatte",
-      "dracula",
-      "coffee",
+      // "light",
+      // "dark",
+      // "caramellatte",
+      // "dracula",
+      // "coffee",
       "luxury",
-      "retro",
+      // "retro",
       
     ],
   },

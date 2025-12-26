@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* border for NoteCard.jsx */
+.border-base-content {
+  border-color: oklch(var(--color-base-content));
+}
